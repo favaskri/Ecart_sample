@@ -19,14 +19,15 @@ app.set('view engine', 'hbs');
 app.engine('hbs', hbs({extname:'hbs',defaultLayout:'layout',layoutsDir:__dirname+'/views/layout/',
 partialsDir:__dirname+'/views/partials/'}))
 
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUplod());
-app.use(session({secret:"key",cookie:{maxAge:600000}}))
-
+ app.use(session({secret:"key",resave: true,
+ saveUninitialized: true,cookie:{maxAge:5000}}))
 db.connect((err)=>{
   if(err) console.log("Connection Erron"+err)
   else
