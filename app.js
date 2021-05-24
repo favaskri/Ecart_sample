@@ -27,7 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUplod());
  app.use(session({secret:"key",resave: true,
- saveUninitialized: true,cookie:{maxAge:5000}}))
+ saveUninitialized: true,cookie:{maxAge:50000}}))
 db.connect((err)=>{
   if(err) console.log("Connection Erron"+err)
   else
