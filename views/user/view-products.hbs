@@ -9,7 +9,8 @@
                     <div class="card-body">
                         <h5 class="card-title">{{this.product_name}}</h5>
                         <p class="card-text">{{this.product_name_fr}}</p>
-                        <a href="/add-to-cart/{{this._id}}" class="btn btn-primary">Add to Cart</a>
+                        
+                        <button onclick="addToCart('{{this._id}}'')" class="btn btn-primary">Add to Cart</button>
                     </div>
 
                 </div>
@@ -21,3 +22,4 @@
 
     </div>
 </section>
+
