@@ -51,7 +51,7 @@ module.exports = {
                 let proExit = userCart.products.findIndex(product => product.item == proId)
                 console.log(proExit);
                 if (proExit !== -1) {
-                    db.get().collection(collection.CART_COLLECTION).update({ 'products.item': objectId(proId) },
+                    db.get().collection(collection.CART_COLLECTION).update({ user:objectId(userId),'products.item': objectId(proId) },
                         {
                             $inc: { 'products.$.quantity': 1 }
                         }).then(() => { resolve() })
@@ -86,23 +86,29 @@ module.exports = {
                     $match: { user: objectId(userId) }
                 },
                 {
-                    $unwind:'$products'
+                    $unwind: '$products'
 
-                }, 
+                },
                 {
-                    $project:{
-                        item:'$products.item',
-                        quantity:'$products.quantity'
+                    $project: {
+                        item: '$products.item',
+                        quantity: '$products.quantity'
                     }
                 },
                 {
-                    $lookup:{ 
-                        from:collection.PRODUCT_COLLECTIONS,
-                        localField:'item',
-                        foreignField:'_id',
-                        as:'product'
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTIONS,
+                        localField: 'item',
+                        foreignField: '_id',
+                        as: 'product'
                     }
 
+                },
+                {
+                    $project: {
+                        item: 1, quantity: 1, product: { $arrayElemAt: ['$product', 0]}
+
+                    }
                 }
 
             ]).toArray()
@@ -121,7 +127,21 @@ module.exports = {
 
         })
 
+    },
+    changeProductQuantity:(details) =>{
+        details.count=parseInt(details.count)
+       
+            console.log("cartId,proId")
+        return new Promise( (resolve, reject)=>{
+            db.get().collection(collection.CART_COLLECTION).updateOne({ _id:objectId(details.cart),
+                'products.item': objectId(details.product) },
+            {
+                $inc: { 'products.$.quantity': details.count }
+            }).then(() => { resolve() })
+
+        })
     }
+
 
 
 }
