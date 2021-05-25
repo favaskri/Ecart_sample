@@ -88,11 +88,26 @@ module.exports = {
                 {
                     $unwind:'$products'
 
+                }, 
+                {
+                    $project:{
+                        item:'$products.item',
+                        quantity:'$products.quantity'
+                    }
+                },
+                {
+                    $lookup:{ 
+                        from:collection.PRODUCT_COLLECTIONS,
+                        localField:'item',
+                        foreignField:'_id',
+                        as:'product'
+                    }
+
                 }
 
             ]).toArray()
-            console.log(cartItems)
-            resolve(cartItems[0], cartItems)
+            // console.log(cartItems[0].products)
+            resolve(cartItems)
         })
     },
     getCartCount: (userId) => {
