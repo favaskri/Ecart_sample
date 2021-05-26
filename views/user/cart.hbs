@@ -6,6 +6,7 @@
                     <th scope="col">Item</th>
                     <th scope="col">Tittle</th>
                     <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
                 </tr>
 
             </thead>
@@ -21,7 +22,7 @@
                     '{{this.product._id}}',-1)">-</button>{{this.quantity}} <button class="cart-item-count mr-3"
                      onclick="changeQuantity('{{this._id}}','{{this.product._id}}',1)">+</button>
                     </td>
-                    
+                    <td>{{this.product.product_price}}</td>>
                     <td>
                         <a href="" class="btn  btn-danger">remove</a>
                     </td>
@@ -44,7 +45,7 @@
             method: 'post',
             success: (response)=>{
                 alert(response)
-            }
+            } 
             
         })
 

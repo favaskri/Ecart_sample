@@ -7,8 +7,11 @@
                 <div class="card" style="width: 16rem; height: 28rem;">
                     <img class="card-img-top" src="/product-images/{{this._id}}.jpg" alt="Card image cap">
                     <div class="card-body">
-                        <h5 class="card-title">{{this.product_name}}</h5>
-                        <p class="card-text">{{this.product_name_fr}}</p>
+                        <h5 class="card-title">Tittle:{{this.product_name}}</h5>
+                        <p class="card-text">Catogory:{{this.product_name_fr}}</p>
+                        <p class="card-text">Discription:{{this.product_weight}}</p>
+                        <p class="card-text">Price:{{this.product_price}}</p>
+
                         
                         <button onclick="addToCart('{{this._id}}'')" class="btn btn-primary">Add to Cart</button>
                     </div>
