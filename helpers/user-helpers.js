@@ -40,7 +40,7 @@ module.exports = {
         })
     },
     addToCart: (proId, userId) => {
-        
+
         let proObj = {
             item: objectId(proId),
             quantity: 1
@@ -52,7 +52,7 @@ module.exports = {
                 let proExit = userCart.products.findIndex(product => product.item == proId)
                 console.log(proExit);
                 if (proExit !== -1) {
-                    db.get().collection(collection.CART_COLLECTION).update({ user:objectId(userId),'products.item': objectId(proId) },
+                    db.get().collection(collection.CART_COLLECTION).update({ user: objectId(userId), 'products.item': objectId(proId) },
                         {
                             $inc: { 'products.$.quantity': 1 }
                         }).then(() => { resolve() })
@@ -107,7 +107,7 @@ module.exports = {
                 },
                 {
                     $project: {
-                        item: 1, quantity: 1, product: { $arrayElemAt: ['$product', 0]}
+                        item: 1, quantity: 1, product: { $arrayElemAt: ['$product', 0] }
 
                     }
                 }
@@ -129,20 +129,36 @@ module.exports = {
         })
 
     },
-    changeProductQuantity:(details) =>{
-        details.count=parseInt(details.count)
-       
-            console.log("cartId,proId")
-        return new Promise( (resolve, reject)=>{
-            db.get().collection(collection.CART_COLLECTION).updateOne({ _id:objectId(details.cart),
-                'products.item': objectId(details.product) },
-            {
-                $inc: { 'products.$.quantity': details.count }
-            }).then(() => { resolve() })
+    changeProductQuantity: (details) => {
+        details.count = parseInt(details.count)
+        details.quantity = parseInt(details.quantity)
+
+        console.log("cartId,proId")
+        return new Promise((resolve, reject) => {
+            if (details.count == -1 && details.quantity == 1) {
+                db.get().collection(collection.CART_COLLECTION).updateOne({ _id: objectId(details.cart)},
+                     {
+                        $pull: { product: { item: objectId(details.product) } }
+                    }
+                ).then((response) => {
+                    resolve({ removeProduct: true })
+                })
+            } else {
+                db.get().collection(collection.CART_COLLECTION).updateOne({
+                    _id: objectId(details.cart),
+                    'products.item': objectId(details.product)
+                },
+                    {
+                        $inc: { 'products.$.quantity': details.count }
+                    }).then((response) => { resolve(true) })
+                
+
+
+
+            }
 
         })
+
     }
-
-
 
 }
