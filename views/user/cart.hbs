@@ -19,7 +19,7 @@
                     <td>{{this.product.product_name}}</td>
                    
                     <td><button class="cart-item-count mr-3" onclick="changeQuantity('{{this._id}}',
-                    '{{this.product._id}}',-1)">-</button>{{this.quantity}} <button class="cart-item-count mr-3"
+                    '{{this.product._id}}',-1)">-</button><span id="{{this.product._id}}">{{this.quantity}}</span>  <button class="cart-item-count mr-3"
                      onclick="changeQuantity('{{this._id}}','{{this.product._id}}',1)">+</button>
                     </td>
                     <td>{{this.product.product_price}}</td>>
