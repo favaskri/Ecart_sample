@@ -136,8 +136,8 @@ module.exports = {
         console.log("cartId,proId")
         return new Promise((resolve, reject) => {
             if (details.count == -1 && details.quantity == 1) {
-                db.get().collection(collection.CART_COLLECTION).updateOne({ _id: objectId(details.cart)},
-                     {
+                db.get().collection(collection.CART_COLLECTION).updateOne({ _id: objectId(details.cart) },
+                    {
                         $pull: { products: { item: objectId(details.product) } }
                     }
                 ).then((response) => {
@@ -151,12 +151,58 @@ module.exports = {
                     {
                         $inc: { 'products.$.quantity': details.count }
                     }).then((response) => { resolve(true) })
-                
+
 
 
 
             }
 
+        })
+
+    },
+    getTotalAmount: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            let total = await db.get().collection(collection.CART_COLLECTION).aggregate([
+                {
+                    $match: { user: objectId(userId) }
+                },
+                {
+                    $unwind: '$products'
+
+                },
+                {
+                    $project: {
+                        item: '$products.item',
+                        quantity: '$products.quantity'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTIONS,
+                        localField: 'item',
+                        foreignField: '_id',
+                        as: 'product'
+                    }
+
+                },
+                {
+                    $project: {
+                        item: 1, quantity: 1, product: { $arrayElemAt: ['$product', 0] }
+
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: { $multiply: ['$quantity', '$product.product_price'] } }
+                    }
+
+                }
+
+            ]).toArray()
+            console.log(total[0].total)
+
+            resolve(total[0].total)
         })
 
     }

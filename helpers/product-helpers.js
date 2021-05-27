@@ -7,7 +7,9 @@ const collections = require('../cofig/collections')
 const { response } = require('express')
 module.exports = {
     addProduct: (product, callback) => {
-        console.log(product)
+
+        product.product_price= parseInt(product.product_price)
+
         db.get().collection('product').insertOne(product).then((data) => {
             // console.log(data)
             callback(data.ops[0]._id)
@@ -36,13 +38,14 @@ module.exports = {
         })
     },
     updateProduct: (proId, proDetails) => {
+    
         return new Promise((resolve, reject) => {
             db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({ _id: objectId(proId) }, {
                 $set: {
                     product_name: proDetails.product_name,
                     product_name_fr: proDetails.product_name_fr,
                     product_weight: proDetails.product_weight,
-                    product_price: proDetails.product_price
+                    product_price: parseInt( proDetails.product_price)
                 }
 
             }).then((response) => {
