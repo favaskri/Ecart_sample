@@ -150,11 +150,7 @@ module.exports = {
                 },
                     {
                         $inc: { 'products.$.quantity': details.count }
-                    }).then((response) => { resolve(true) })
-
-
-
-
+                    }).then((response) =>  resolve({status:true }))
             }
 
         })
@@ -200,7 +196,7 @@ module.exports = {
                 }
 
             ]).toArray()
-            console.log(total[0].total)
+           
 
             resolve(total[0].total)
         })
