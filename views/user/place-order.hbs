@@ -11,6 +11,7 @@
                         <input class="form-control" type="text" id="pincode" name="pincode">
                         <label for="">Mobile Number</label>
                         <input class="form-control" type="text" id="mobile" name="mobile">
+                        <input type="text" name="userId" id="" value="{{user._id}}" hidden>
                     </div>
 
                 </div>
@@ -22,11 +23,11 @@
                         <div class="payment">
                             <p>Payment Method</p>
                             <label class="radio-inline">
-                                <input type="radio" name="Payment Methode" value="COD" checked>COD
+                                <input type="radio" name="payment-method" value="COD" checked>COD
                             </label>
                             <label>
                                 <label class="radio-inline"></label>
-                                <input type="radio" name="Payment Methode" value="Online" checked>Online Payment
+                                <input type="radio" name="payment-method" value="Online" checked>Online Payment
                             </label>
                             <button type="submit" class="btn btn-primary float-right">Checkout</button>
 
@@ -51,3 +52,18 @@
 
     </div>
 </section>
+<script>
+    $("#checkout-form").submit((e)=>{
+        e.preventDefault();
+        $.ajax({
+            url:'/place-order',
+            method:'post',
+            data:$("#checkout-form").serialize(),
+            success:(response)=>{
+                alert(response)
+            }
+
+        })
+    })
+
+</script>
