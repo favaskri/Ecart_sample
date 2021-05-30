@@ -3,6 +3,11 @@ var collection = require('../cofig/collections')
 const bcrypt = require('bcrypt')
 const collections = require('../cofig/collections')
 var objectId = require('mongodb').ObjectID
+const Razorpay = require('razorpay')
+var instance = new Razorpay({
+    key_id: 'rzp_test_qOMpLnoYz4yM14',
+    key_secret: 'a1lqu9SAA4Kg4ulg0pQ6kW01',
+});
 const { response } = require('express')
 const { RequestHeaderFieldsTooLarge } = require('http-errors')
 module.exports = {
@@ -221,7 +226,7 @@ module.exports = {
             }
             db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
                 db.get().collection(collection.CART_COLLECTION).removeOne({ user: objectId(order.userId) })
-                resolve()
+                resolve(response.ops[0]._id)
             })
 
         })
@@ -287,6 +292,29 @@ module.exports = {
 
 
         })
+    },
+    generateRazorpay: (orderId, totalPrice) => {
+        console.log(orderId, totalPrice)
+
+        return new Promise(async (resolve, reject) => {
+
+            var options = {
+                amount: totalPrice,  // amount in the smallest currency unit
+                currency: "INR",
+                receipt: ""+orderId
+            };
+            instance.orders.create(options, function (err, order) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    console.log("new Order", order);
+                    resolve(order)
+                }
+                });
+            
+
+        })
+
     }
 
 }
