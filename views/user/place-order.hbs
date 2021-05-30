@@ -47,6 +47,7 @@
 
     </div>
 </section>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
 <script>
     $("#checkout-form").submit((e) => {
@@ -56,7 +57,7 @@
             method: 'post',
             data: $("#checkout-form").serialize(),
             success: (response) => {
-                alert(response)
+              console.log(response)
                 if (response.codSuccess) {
                     location.href = "/order-success"
                 }
@@ -107,16 +108,21 @@
     }
     function verifyPayment(payment, order) {
         $.ajax({
-            url: '/verify-payment'
+            url: '/verify-payment',
             data: {
                 payment,
                 order
             },
             method: 'post',
-success:(response)=>{
-console.log(response)
+            success:(response)=>{
+                if( response.status){
+                    location.href = "/order-success"
+                }else{
+                    alert("payment failed")
+                }
+            }
 
-}
+
         })
 
     }

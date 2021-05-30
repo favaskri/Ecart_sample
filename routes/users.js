@@ -65,8 +65,14 @@ router.get('/logout', (req, res) => {
   res.redirect('/')
 })
 router.get('/cart', verifyLogin, async (req, res) => {
+
   let products = await userHelpers.getCartProducts(req.session.user._id)
-  let totalValue = await userHelpers.getTotalAmount(req.session.user._id)
+  let totalValue = 0
+  if(products.length>0){
+    totalValue = await userHelpers.getTotalAmount(req.session.user._id)
+
+  }
+  
 
   // console.log(products)
 
@@ -100,7 +106,8 @@ router.post('/place-order', async(req, res)=>{
   let totalPrice= await userHelpers.getTotalAmount(req.body.userId)
   let products = await userHelpers.getCartProductList(req.body.userId)
   userHelpers.placeOrder(req.body,products,totalPrice).then((orderId)=>{
-    if(req.body['payment-method']==='COD'){
+    if(req.body['payment-method']=='COD')
+    {
       res.json({codSuccess:true})
 
     }else{
@@ -131,7 +138,17 @@ router.get('/view-order-products/:id',async(req, res)=>{
 
 })
 router.post('/verify-payment',(req, res)=>{
-  console.log("req.bodyvP",req.body)
+  console.log(req.body);
+  userHelpers.verifypayment(req.body).then(()=>{
+    userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
+      console.log("payment success")
+      res.json({status: true })
+    })
+    
+  }).catch((err)=> {
+    console.log(err)
+    res.json({status: false,errMsg: ''})
+  })
 })
 module.exports = router;
 
