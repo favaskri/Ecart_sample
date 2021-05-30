@@ -2,6 +2,8 @@ var db = require('../cofig/connection')
 var collection = require('../cofig/collections')
 var objectId = require('mongodb').ObjectID
 const collections = require('../cofig/collections')
+var $  = require( 'jquery' );
+var dt = require( 'datatables.net' );
 
 
 const { response } = require('express')

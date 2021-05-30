@@ -8,6 +8,8 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cookie-parser": "~1.4.4",
+    "datatables.net": "^1.10.24",
+    "datatables.net-dt": "^1.10.24",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "express-fileupload": "^1.2.1",
